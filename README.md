@@ -26,7 +26,7 @@
 
 # 📖 Blog App <a name="about-project"></a>
 
-This project is about a blog app created with ruby on rails using Postgres for saving data
+This project is about a blog app created with ruby on rails using Postgres for saving data and manupulate them in a browser
 
 
 ## 🛠 Built With <a name="built-with"></a>
