@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_15_212715) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_19_180600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "comments", force: :cascade do |t|
-    t.string "text"
     t.bigint "author_id", null: false
     t.bigint "post_id", null: false
+    t.string "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_comments_on_author_id"
@@ -34,11 +34,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_15_212715) do
   end
 
   create_table "posts", force: :cascade do |t|
+    t.bigint "author_id", null: false
     t.string "title"
     t.string "text"
-    t.integer "comments_counter", default: 0
-    t.integer "likes_counter", default: 0
-    t.bigint "author_id", null: false
+    t.integer "comments_counter"
+    t.integer "likes_counter"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_posts_on_author_id"
@@ -60,7 +60,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_15_212715) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
-    t.index ["email"], name: "index_users_on_email"
+    t.string "role"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

@@ -4,6 +4,14 @@
             Post # <%= "#{post.id}"%>
         </h4>
         <p class="comment-heading">Comments: <%= @post.comments_counter %>, Likes: <%= @post.likes_counter %></p>
+        
+        <%if can? :destroy, post %>
+          <%= button_to "Delete Post", 
+              user_post_path(post.author,post), 
+              method: :delete, 
+              data: { turbo_confirm: "Are you sure?" },
+              class: "btn btn-danger p-1" %>
+          <% end %>
     </div>
     <p><%= @post.title %></p>
     <p><%= @post.text %></p>

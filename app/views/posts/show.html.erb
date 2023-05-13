@@ -1,17 +1,31 @@
-<section class="section">
-    <%= render 'post', post: @post %>
-    <% if @post.comments_counter > 0 %>
-          <% @post.comments.each do |comment| %>
-            <%= render 'comments', comment: comment, user: @user %>
-            <% end %>
+<div class="container-fluid p-3">
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+        <h4><%= @post.title %> by <%= @user.name %></h4>
+        <div class="text-end mb-3">
+          <p>Comments: <%= @post.comments_counter %>, Likes: <%= @post.likes_counter %></p>
+        </div>
+        <p><%= @post.text %></p>
+      </div>
+      <div class="comments">
+        <% @post.comments.each do |comment| %>
+          <div class="card mb-3">
+            <div class="card-body">
+             <p><strong><%= comment.author.name %> :</strong> <%= comment.text %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="d-flex justify-content-center mb-3">
+          <%= form_with model: Like.new, url: user_post_likes_path(@user, @post), class: "me-2" do |form| %>
+            <div class="d-grid">
+              <%= form.submit "Like", class: "btn btn-primary" %>
+            </div>
           <% end %>
-</section>
-<div class="like-btn">
-  <%= form_with model: @post, url: "./#{@post.id}/likes", method: :post do |f|%>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-    <%= f.submit 'Like' %>
-  <%end%>
+        <%= link_to('Add New Comment', new_user_post_comment_path(@user, @post), class: 'btn btn-primary btn-custom') %>
+      </div>
+    </div>
   </div>
-  <div class="create-btn">
-  <button><%= link_to 'Create comment', new_user_post_comment_path(@user.id,@post.id) %></button>
 </div>
+

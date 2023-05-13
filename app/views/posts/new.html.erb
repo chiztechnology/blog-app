@@ -1,12 +1,19 @@
-<h1>Create New Post</h1>
-<div class="create-container">
-  <%= form_with model: @post, url: user_posts_path, method: :post do |f|%>
-  <%= f.label :title %>
-  <%= f.text_field :title, placeholder: 'Title' %>
-  <br>
-  <%= f.label :text %>
-  <%= f.text_field :text, placeholder: 'Text' %>
-  <br>
-  <%= f.submit 'Create post'%>  
-  <%end%>
+<div class="container-fluid p-3">
+<h2 class="mb-4">New Post</h2>
+
+<%= form_with model: @post, url: user_posts_path, class: 'row g-3' do |form| %>
+  <div class="col-md-12">
+    <%= form.label :title, class: 'form-label' %>
+    <%= form.text_field :title, class: 'form-control' %>
+  </div>
+
+  <div class="col-md-12">
+    <%= form.label :text, class: 'form-label' %>
+    <%= form.text_area :text, class: 'form-control', rows: 8 %>
+  </div>
+
+  <div class="col-md-12">
+    <%= form.submit "Submit", class: 'btn btn-primary' %>
+  </div>
+<% end %>
 </div>
