@@ -14,24 +14,28 @@
             <p class="card-text mb-3">Comments: <%= post.comments_counter %>, Likes: <%= post.likes_counter %></p>
             </div>
           <% end %>
+          <div class="text-end">
           <%if can? :destroy, post %>
           <%= button_to "Delete Post", 
               user_post_path(post.author,post), 
               method: :delete, 
               data: { turbo_confirm: "Are you sure?" },
-              class: "btn btn-danger p-1" %>
+              class: "btn btn-danger" %>
           <% end %>
+          </div>
           <div>
             <h5 class="card-title fw-bold mb-3">Comments</h5>
             <% post.recent_comments.each do |comment| %>
               <p><strong><%= comment.author.name %> :</strong> <%= comment.text %></p>
+            <div class="text-end">
             <% if can? :destroy, comment %>
               <%= button_to "Delete Comment", 
                   user_post_comment_path(comment.author_id, comment.post_id, comment), 
                   method: :delete, 
                   data: { turbo_confirm: "Are you sure?" }, 
-                  class: "btn btn-danger p-1" %>
+                  class: "btn btn-danger" %>
             <% end %>
+            </div>           
             <% end %>
           </div>
         </div>
