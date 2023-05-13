@@ -1,12 +1,8 @@
-<% @users.each do |user| %>
-    <div class="user_card">
-        <div class="image_container">
-            <img class="image"src="<%= user.photo%>">
-        </div>
-        
-        <div class="details_card">
-            <p class="user_name"><%= link_to user.name, user_path(user.id) %></p>
-            <span class="counter">Number of posts: <%= user.posts.count%></span>
-        </div>
-    </div> 
-<%end%>
+<div class="container-fluid p-3">
+    <h1 class="text-center fw-bold">Users List</h1>
+    <ul class="list-group">
+        <% @users.order(id: :asc).each do |user| %>
+            <li><%= link_to(render('user_intro', user: user), user_path(user)) %></li>
+        <% end %>
+    </ul>
+</div>

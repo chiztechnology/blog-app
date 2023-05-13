@@ -1,30 +1,34 @@
-<head>
-  <%= stylesheet_link_tag 'style' %>
-</head>
-
-<section class="section">
-
-<% if @user.nil? %>
-  <h4>User not found</h4>
-<% else %>
-<div>
-  <%= render 'user', user: @user %>
-<div>
-
-<div class="create-btn">
-  <button><%= link_to 'Create post', new_user_post_path(user_id: @user.id) %></button>
+<div class="container-fluid p-3">
+  <div class="row">
+    <div class="col-md-12">
+      <%= render('user_intro', user: @user) %>
+    </div>
+    <div class="col-md-12">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Bio</h5>
+          <p class="card-text"><%= @user.bio %></p>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mb-3">
+        <%= link_to('Add New Post', new_user_post_path(@user), class: 'btn btn-primary btn-custom') %>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Recent Posts</h5>
+          <% @user.recent_posts.each do |post| %>
+          <div class="mb-3">
+            <h6 class="card-subtitle mb-2 text-muted"><%= post.title %></h6>
+            <p class="card-text"><%= post.text %></p>
+            <p class="card-text text-end mb-3">Comments: <%= post.comments_counter %>, Likes: <%= post.likes_counter %></p>
+          </div>
+          <% end %>
+          <div class="d-flex justify-content-center mt-3">
+            <%= link_to('See all posts', user_posts_path(@user), class: 'btn btn-primary btn-custom') %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<%= render 'bio' %>
-
-<ul>
-<% @user.recent_most_recent_posts.each do |post| %>
-  <%= render 'post', post: post %>
-<% end %>
-</ul>
-
-<% end %>
-<div class="button">
-  <button type="button"><%= link_to "See all posts", user_posts_path(user_id: @user.id) %></button>
-</div>
-</section>

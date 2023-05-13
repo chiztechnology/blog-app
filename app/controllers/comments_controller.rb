@@ -4,16 +4,17 @@ class CommentsController < ApplicationController
   end
 
   def create
-    post = Post.find(params[:post_id])
-    @comment = Comment.new(params.require(:comment).permit(:text).merge(author_id: current_user.id, post_id: post.id))
+    @user = User.find(params[:user_id])
+    @post = @user.posts.find(params[:post_id])
+    @comment = Comment.new(comment_params)
 
-    respond_to do |format|
-      format.html do
-        if @comment.save
-          redirect_to user_post_path(current_user, post)
-        else
-          redirect_to new_user_post_comment_path(current_user)
-        end
+    @comment.author = current_user
+    @comment.post = @user.posts.find(params['post_id'])
+    respond_to do |f|
+      if @comment.save
+        f.html { redirect_to user_post_path(@user, @post) }
+      else
+        f.html { render :new }
       end
     end
   end
@@ -21,8 +22,11 @@ class CommentsController < ApplicationController
   def destroy
     @comment = Comment.find(params[:id]).destroy
     respond_to do |f|
-      f.html { redirect_to user_post_path(current_user), notice: 'The Comment has been destroyed successfully' }
+      f.html { redirect_to user_posts_path(current_user), notice: 'The Comment has been destroyed successfully' }
     end
   end
 
+  def comment_params
+    params.require(:comment).permit(:text)
+  end
 end

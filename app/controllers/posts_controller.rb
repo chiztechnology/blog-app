@@ -1,10 +1,11 @@
 class PostsController < ApplicationController
   def index
-    @user = User.includes(:posts, posts: [:comments]).find(params[:user_id])
+    @user = User.find(params[:user_id])
+    @posts = @user.posts.includes(:comments, :author)
   end
 
   def show
-    @user = User.includes(posts: [:comments]).find(params[:user_id])
+    @user = User.find(params[:user_id])
     @post = @user.posts.find(params[:id])
   end
 
@@ -13,16 +14,16 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(params.require(:post).permit(:title, :text).merge(author_id: current_user.id, comments_counter: 0,
-                                                                       likes_counter: 0))
+    @post = current_user.posts.new(post_params)
+    @post.author = current_user
+    @post.comments_counter = 0
+    @post.likes_counter = 0
 
-    respond_to do |format|
-      format.html do
-        if @post.save
-          redirect_to user_post_path(current_user, @post)
-        else
-          redirect_to new_user_post_path(current_user)
-        end
+    respond_to do |f|
+      if @post.save
+        f.html { redirect_to user_posts_path }
+      else
+        f.html { render :new }
       end
     end
   end
@@ -30,7 +31,11 @@ class PostsController < ApplicationController
   def destroy
     @post = Post.find(params[:id]).destroy
     respond_to do |f|
-      f.html { redirect_to user_post_path(current_user), notice: 'The Post has been destroyed successfully' }
+      f.html { redirect_to user_posts_path(current_user), notice: 'The Post has been destroyed successfully' }
     end
+  end
+
+  def post_params
+    params.require(:post).permit(:title, :text)
   end
 end

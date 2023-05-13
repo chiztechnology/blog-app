@@ -1,22 +1,45 @@
-<section class="section">
-<% if @user.nil? %>
-  <h4>User not found</h4>
-<% else %>
-<div>
-  <%= render partial: 'users/user', locals: { user: @user } %>
-<div>
-<% end %>
-
-<ul>
-<% @user.posts.each_with_index do |post, index| %>
-  <li>
-  <%= render partial: 'users/post', locals: { post: post, index: index } %>
-  <% if post.comments_counter > 0 %>
-          <% post.five_most_recent_comments.each do |comment| %>
-            <%= render 'comments', comment: comment, user: @user %>
-            <% end %>
+<div class="container-fluid p-3">
+  <div class="row">
+    <div class="col-md-12">
+      <%= render('users/user_intro', user: @user) %>
+    </div>
+    <div class="col-md-12">
+      <% @posts.each do |post| %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <%= link_to user_post_path(@user, post), class: 'text-decoration-none' do %>
+          <h5 class="card-title fw-bold mb-3"><%= post.title %></h5>
+          <p class="card-text mb-3"><%= post.text %></p>
+            <div class="text-end">
+            <p class="card-text mb-3">Comments: <%= post.comments_counter %>, Likes: <%= post.likes_counter %></p>
+            </div>
           <% end %>
-  </li>
-  <% end %>
-</ul>
-</section>
+          <%if can? :destroy, post %>
+          <%= button_to "Delete Post", 
+              user_post_path(post.author,post), 
+              method: :delete, 
+              data: { turbo_confirm: "Are you sure?" },
+              class: "btn btn-danger p-1" %>
+          <% end %>
+          <div>
+            <h5 class="card-title fw-bold mb-3">Comments</h5>
+            <% post.recent_comments.each do |comment| %>
+              <p><strong><%= comment.author.name %> :</strong> <%= comment.text %></p>
+            <% if can? :destroy, comment %>
+              <%= button_to "Delete Comment", 
+                  user_post_comment_path(comment.author_id, comment.post_id, comment), 
+                  method: :delete, 
+                  data: { turbo_confirm: "Are you sure?" }, 
+                  class: "btn btn-danger p-1" %>
+            <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <% end %>
+      <div class="d-flex justify-content-center mt-3">
+        <button class="btn btn-primary">Pagination</button>
+      </div>
+    </div>
+  </div>
+</div>
