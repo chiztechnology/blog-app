@@ -4,6 +4,7 @@ class Post < ApplicationRecord
   has_many :likes
 
   after_create :update_posts_counter
+  after_destroy :update_posts_counter
 
   validates :title, presence: true, length: { maximum: 250 }
   validates :comments_counter, numericality: { only_inter: true, greater_than_or_equal_to: 0 }
