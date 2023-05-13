@@ -27,12 +27,10 @@ class PostsController < ApplicationController
     end
   end
 
-def destroy
-  post = Post.find(params[:id])
-  authorize! :destroy, post
-  post.destroy!
-  flash[:alert] = 'Deleted post'
-  redirect_to user_posts_url
-end
-
+  def destroy
+    @post = Post.find(params[:id]).destroy
+    respond_to do |f|
+      f.html { redirect_to user_post_path(current_user), notice: 'The Post has been destroyed successfully' }
+    end
+  end
 end
